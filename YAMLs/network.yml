@@ -1,0 +1,32 @@
+--- 
+# vagrant-ansible-openstack/network.yml
+- hosts: network
+  tags:
+    - network
+  roles:
+    - role: ntp
+
+    - role: openstack-neutron_plugin_ml2
+
+    - role: openstack-neutron_plugin_openvswitch_agent
+      local_ip: "{{ ansible_eth2.ipv4.address }}"
+      rabbit_hostname: "{{ hostvars['controller'].ansible_eth1.ipv4.address }}"
+      rabbit_username: "{{ RABBIT_NEUTRON_USER }}"
+      rabbit_pass: "{{ RABBIT_NEUTRON_PASS }}"
+
+    - role: openstack-neutron_l3_agent
+      external_interface: eth3
+      keystone_hostname: "{{ hostvars['controller'].ansible_eth1.ipv4.address }}"
+      nova_metadata_ip: "{{ hostvars['controller'].ansible_eth1.ipv4.address }}"
+      metadata_secret: "{{ METADATA_SECRET }}"
+      neutron_user: "{{ NEUTRON_USER }}"
+      neutron_pass: "{{ NEUTRON_PASS }}"
+      rabbit_hostname: "{{ hostvars['controller'].ansible_eth1.ipv4.address }}"
+      rabbit_username: "{{ RABBIT_NEUTRON_USER }}"
+      rabbit_pass: "{{ RABBIT_NEUTRON_PASS }}"
+
+    - role: openstack-neutron_dhcp_agent
+      rabbit_hostname: "{{ hostvars['controller'].ansible_eth1.ipv4.address }}"
+      rabbit_username: "{{ RABBIT_NEUTRON_USER }}"
+      rabbit_pass: "{{ RABBIT_NEUTRON_PASS }}"
+

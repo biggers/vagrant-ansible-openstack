@@ -42,7 +42,7 @@ url=https://github.com/openstack-ansible-galaxy/openstack-neutron_dhcp_agent.git
 url=https://github.com/openstack-ansible-galaxy/openstack-nova_compute.git
 [submodule "roles/mysql"]
 	path = roles/mysql
-	url = https://github.com/ANXS/mysql.git
+	url = https://github.com/geerlingguy/ansible-role-mysql
 [submodule "roles/ntp"]
 	path = roles/ntp
 	url = https://github.com/ANXS/ntp.git

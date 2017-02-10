@@ -1,0 +1,31 @@
+--- 
+# vagrant-ansible-openstack/compute.yml
+
+- hosts: compute_nodes
+  tags:
+    - compute_nodes
+  roles:
+    - role: ntp
+
+    - role: openstack-neutron_plugin_ml2
+
+    - role: openstack-neutron_plugin_openvswitch_agent
+      local_ip: "{{ ansible_eth2.ipv4.address }}"
+      rabbit_hostname: "{{ hostvars['controller'].ansible_eth1.ipv4.address }}"
+      rabbit_username: "{{ RABBIT_NEUTRON_USER }}"
+      rabbit_pass: "{{ RABBIT_NEUTRON_PASS }}"
+
+    - role: openstack-nova_compute
+      my_ip: "{{ ansible_eth1.ipv4.address }}"
+      rabbit_hostname: "{{ hostvars['controller'].ansible_eth1.ipv4.address }}"
+      rabbit_username: "{{ RABBIT_NOVA_USER }}"
+      rabbit_pass: "{{ RABBIT_NOVA_PASS }}"
+      keystone_hostname: "{{ hostvars['controller'].ansible_eth1.ipv4.address }}"
+      neutron_hostname: "{{ hostvars['controller'].ansible_eth1.ipv4.address }}"
+      glance_hostname: "{{ hostvars['controller'].ansible_eth1.ipv4.address }}"
+      neutron_user: "{{ NEUTRON_USER }}"
+      neutron_pass: "{{ NEUTRON_PASS }}"
+      nova_user: "{{ NOVA_USER }}"
+      nova_pass: "{{ NOVA_PASS }}"
+      vncserver_proxy_address: "{{ hostvars['controller'].ansible_eth1.ipv4.address }}"
+      virt_type: "{{ NOVA_VIRT_TYPE }}"

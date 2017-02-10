@@ -1,0 +1,32 @@
+# playbook.yml, "basic" nodes configure	
+---
+- hosts: all
+  tasks:
+
+    - name: Set correct sudoers entry for Vagrant
+      lineinfile: "dest=/etc/sudoers.d/vagrant state=present create=yes regexp='^%vagrant ' line='%vagrant ALL=(ALL) NOPASSWD: ALL' validate='visudo -cf %s'"
+
+    - name: Update repo-cache
+      apt: update_cache=yes cache_valid_time=7200
+
+    - name: install "aptitude" for Ansible apt-upgrade
+      apt: name=aptitude state=present
+
+    - name: Update all Xenial packages "safely"
+      apt: upgrade=safe
+
+    - name: Add Newton repo
+      command: add-apt-repository cloud-archive:newton
+      # apt_repository:
+      #   repo: "cloud-archive:newton"
+      #   update_cache: yes
+      when: openstack_version == 'newton'
+
+    - name: Update repo-cache
+      apt: update_cache=yes cache_valid_time=7200
+
+    - name: Add Kilo repo
+      apt_repository:
+        repo: "ppa:ubuntu-cloud-archive/kilo-staging"
+        update_cache: yes
+      when: openstack_version == 'kilo'
